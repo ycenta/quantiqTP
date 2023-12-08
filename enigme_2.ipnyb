@@ -1,0 +1,26 @@
+from qiskit import QuantumCircuit, Aer, transpile, assemble
+
+#Créer un circuit quantique avec 4 qubits pour chaque personz
+qc = QuantumCircuit(4, 3)
+
+#porte Hadamard
+for qubit in range(4):
+    qc.h(qubit)
+
+qc.cx(3, 2)
+qc.cx(2, 1)
+qc.cx(1, 0)
+
+qc.measure([0, 1, 2], [0, 1, 2])
+simulator = Aer.get_backend('qasm_simulator')
+transpiled_circuit = transpile(qc, simulator)
+qobj = assemble(transpiled_circuit)
+result = simulator.run(qobj).result()
+counts = result.get_counts(qc)
+
+for outcome in counts:
+    answers = outcome
+
+print("Couleurs des cheveux déterminées pour lesparticipants:")
+for i, color in enumerate(answers):
+    print(f"Personne {i+1}: {'Indigo' if color == '1' else 'Orange'}")
